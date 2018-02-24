@@ -1,0 +1,20 @@
+- name: Download terraform
+  get_url:
+    url: "https://releases.hashicorp.com/terraform/{{tf_version}}/terraform_{{tf_version}}_linux_{{tf_arch|default('amd64')}}.zip"
+    dest: /usr/local/src
+    validate_certs: "{{validate_certs|default('no')}}"
+  tags: download
+  
+- name: uncompress terraform 
+  shell: |
+    cd /usr/local/src
+    unzip -o terraform_{{tf_version}}_linux_{{tf_arch|default('amd64')}}.zip
+  tags: install
+  creates: /usr/local/src/terraform
+
+- name: copy terraform to path 
+  copy:
+    src: /usr/local/src/terraform
+    dest: "{{tf_dest}}"
+    remote_src: true
+  tags: install
